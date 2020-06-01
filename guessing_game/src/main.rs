@@ -17,17 +17,21 @@ fn main()
 
         io::stdin().read_line(&mut suposicao).expect("Falha ao ler a linha");
 
-        let suposicao: u32 =suposicao.trim().parse().expect("Digite um número!");
+        let suposicao: u32 = match suposicao.trim().parse()
+        {
+            Ok(num)=> num,
+            Err(_)=> continue,
+        };
 
         match suposicao.cmp(&numero_secreto)
         {
-            Ordering::Less => println!("O número digitad é menor."),
+            Ordering::Less => println!("O número digitado é menor."),
             Ordering::Equal=>
             {
                 println!("Você ganhou!");
                 break;
             },
-            Ordering::Greater=> println!("O número digitado é maior."),
+            Ordering::Greater=> println!("O número digitado é maior.")
         }
     }
 }
