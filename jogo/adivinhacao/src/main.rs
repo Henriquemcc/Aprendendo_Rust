@@ -1,0 +1,109 @@
+use rand::Rng;
+mod myio;
+
+fn main()
+{
+    //Exibindo mensagem de bem vindo
+    println!("Bem vindo ao jogo da adivinhação");
+
+    //Obtendo a dificuldade
+    let mut dificuldade: u8;
+    loop
+    {
+        //Exibindo as dificuldades
+        println!("Selecione a dificuldade:");
+        println!("(1) Fácil");
+        println!("(2) Médio");
+        println!("(3) Difícil");
+
+        //Obtendo a dificuldade
+        dificuldade= myio::read_u8();
+
+        if dificuldade < 1 || dificuldade > 3
+        {
+            eprintln!("Valor inválido");
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    //Configurando a quantidade total de tentativas de acordo com a dificuldade escolhida
+    let mut quantidade_total_de_tentativas: u8=0;
+
+    if dificuldade==1
+    {
+        quantidade_total_de_tentativas=20;
+    }
+    else if dificuldade == 2
+    {
+        quantidade_total_de_tentativas=10;
+    }
+    else if dificuldade== 3
+    {
+        quantidade_total_de_tentativas=5;
+    }
+
+    //Gerando um numero secreto
+    let numero_secreto:u8 = rand::thread_rng().gen_range(1, 101);
+
+    //Declarando pontos
+    let mut pontos: i16 = 1000;
+
+    for rodada in 1..quantidade_total_de_tentativas
+    {
+        println!("Tentativa {} de {}", rodada, quantidade_total_de_tentativas);
+
+        //Obtendo o chute do usuario
+        let mut chute:u8;
+        loop
+        {
+            println!("Digite um numero entre 1 e 100");
+            chute = myio::read_u8();
+
+            //Verificando se o chute eh invalido
+            if chute <1 || chute >100
+            {
+                //Imprimindo mensagem de erro
+                eprintln!("O chute deve ser entre 1 e 100");
+            }
+            else
+            {
+                //Saindo do loop
+                break;
+            }
+        }
+
+        //Verificando se o chute eh igual ao numero secreto
+        if chute==numero_secreto
+        {
+            println!("Você acertou e fez {} pontos", pontos);
+            break;
+        }
+        else
+        {
+            //Verificando se o chute eh maior que o numero secreto
+            if chute > numero_secreto
+            {
+                println!("O seu chute foi maior que o número secreto");
+            }
+
+            //Verificando se o chute eh menor que o numero secreto
+            else if chute < numero_secreto
+            {
+                println!("O seu chute foi menor que o numero secreto");
+            }
+
+            //Calculando a quantidade de pontos que foram perdidos
+            let pontos_perdidos = (i16::from(chute)-i16::from(numero_secreto)).abs();
+            pontos -= pontos_perdidos;
+        }
+
+    }
+
+    //Imprimindo o numero secreto e a pontuacao
+    println!("O número secreto era {}. Você fez {} pontos", numero_secreto, pontos);
+
+
+}
